@@ -1,0 +1,23 @@
+.error-window {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 25px 15px;
+  background-color: $error-window-bg;
+  border: 1px solid $error-window-border;
+  border-radius: 10px;
+  color: $dim-white;
+  font-size: 1rem;
+  transform: translate3d(150%, 0, 0);
+  transition: transform ease-out .5s;
+
+
+
+  &.show {
+    transform: translate3d(0, 0, 0);
+  }
+}

@@ -1,0 +1,21 @@
+.btn {
+  display: block;
+  padding: 10px 15px;
+  background-color: $btn-bg-color;
+  font-size: 1rem;
+  text-transform: capitalize;
+  outline: none;
+  cursor: pointer;
+  color: $btn-text-color;
+  border: 1px solid $black;
+  border-radius: 10px;
+
+  &:hover {
+    color: $btn-text-hover-color;
+  }
+
+  &:active {
+    background-color: $btn-hover-color;
+    border-color: $btn-hover-color;
+  }
+}

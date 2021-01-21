@@ -1,0 +1,9 @@
+.header-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: $header-panel-bg-color;
+}

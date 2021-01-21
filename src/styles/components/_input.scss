@@ -1,0 +1,57 @@
+.input-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: relative;
+
+  .input-error-msg {
+    position: absolute;
+    bottom: 100%;
+    font-size: 0.8rem;
+    //font-weight: bold;
+    color: $input-error;
+  }
+
+  .input-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    border: 1px solid $black;
+    border-radius: 10px;
+    overflow: hidden;
+
+    // Changes container styles when focus within happens
+    //&:focus-within {
+    //  border-color: darken(gray, 20%);
+    //}
+
+    input {
+      width: 100%;
+      background-color: $input-bg-color;
+      color: $input-text-color;
+      padding: 10px 15px;
+      font-size: 1rem;
+    }
+
+    input::placeholder {
+      color: $input-placeholder-color;
+    }
+
+    input:focus {
+      background-color: lighten($input-bg-color, 5%);
+    }
+
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus {
+      background-color: $input-bg-color;
+      color: $input-text-color;
+    }
+
+    &.error {
+      border-color: $input-error;
+    }
+  }
+}

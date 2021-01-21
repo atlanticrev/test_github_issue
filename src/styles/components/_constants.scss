@@ -1,0 +1,37 @@
+// Main colors
+$black: #000000;
+$white: rgba(255, 255, 255, 1);
+$dim-white: rgba(255, 255, 255, 0.5);
+$light-gray: #2e3338;
+$middle-gray: #222629;
+$dark-gray: #191c1e;
+$blue: #26547c;
+$red: #bf113a;
+$light-red: #d92f57;
+
+// Layout
+$body-bg-color: $middle-gray;
+$header-panel-bg-color: $dark-gray;
+
+// Buttons
+$btn-bg-color: $light-gray;
+$btn-hover-color: $blue;
+$btn-text-color: $dim-white;
+$btn-text-hover-color: $white;
+
+// Inputs
+$input-bg-color: #2e3338;
+$input-placeholder-color: $dim-white;
+$input-text-color: $white;
+$input-error: $red;
+
+// List
+$list-bg-color: $light-gray;
+
+// List item
+$list-item-text-color: $dim-white;
+$list-item-hover-text-color: $white;
+
+// Error window
+$error-window-bg: $red;
+$error-window-border: $light-red;
