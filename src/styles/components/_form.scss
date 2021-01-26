@@ -8,4 +8,14 @@ form {
   & > *:not(:last-child) {
     margin-right: 4px;
   }
+
+  @media (max-width: 650px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    & > *:not(:last-child) {
+      margin-right: 0;
+      margin-bottom: 2px;
+    }
+  }
 }

@@ -26,27 +26,38 @@ export const IssuesPage = () => {
 
     function onSubmitted (owner, repo) {
         onLoadStart();
-        fetch(`https://api.github.com/repos/${owner}/${repo}/issues`)
-            .then(res => res.json())
+        fetch(`https://api.github.com/repos/${owner}/${repo}/issues?per_page=5`)
+            .then(response => {
+                if (!response.ok) {
+                    // Go to catch block (is it correct?)
+                    return false;
+                }
+                return response;
+            })
+            .then(response => response.json())
             .then(items => {
                 onLoadEnd();
                 setIssues(items);
             })
             .catch(err => {
+                console.error(err);
                 onLoadEnd();
                 setShowError(true);
-                console.log(err);
             });
     }
 
     return (
         <>
             <HeaderPanel>
-                <IssuesForm onSubmitted={onSubmitted} />
+                <IssuesForm onSubmitted={onSubmitted}/>
             </HeaderPanel>
-            {loading && <ProgressBar progress={progress} setProgress={setProgress} />}
+            <ProgressBar
+                progress={progress}
+                setProgress={setProgress}
+                isLoading={loading}
+            />
             <List items={issues} />
-            {showError && <ErrorWindow>There is no issues has been found</ErrorWindow>}
+            {showError && <ErrorWindow showError={setShowError}>Owner or Repository not found</ErrorWindow>}
         </>
     );
 };

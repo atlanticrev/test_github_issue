@@ -1,0 +1,25 @@
+.dropdown-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  list-style-type: none;
+  background-color: $list-bg-color;
+  max-height: 500px;
+  overflow-y: scroll;
+
+  & > *:not(:last-child) {
+    border-bottom: 1px solid $black;
+  }
+
+  .dropdown-item {
+    width: 100%;
+    padding: 1rem;
+    color: $list-item-text-color;
+    user-select: none;
+    cursor: pointer;
+  }
+}

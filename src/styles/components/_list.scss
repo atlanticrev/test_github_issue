@@ -13,4 +13,10 @@
   & > *:not(:last-child) {
     border-bottom: 1px solid $black;
   }
+
+  @media (max-width: 960px) {
+    border-right: none;
+    border-left: none;
+    border-radius: 0;
+  }
 }

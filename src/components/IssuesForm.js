@@ -14,11 +14,9 @@ export const IssuesForm = (props) => {
 
     function onSubmit (e) {
         e.preventDefault();
-        console.log('submit', owner, repo);
-        // Check all fields
+        // console.log('submit', owner, repo);
         owner ? setOwnerValidity(true) : setOwnerValidity(false);
         repo ? setRepoValidity(true) : setRepoValidity(false);
-        // Callback if form is valid
         if (owner && repo) {
             props.onSubmitted && props.onSubmitted(owner, repo);
         }
@@ -58,12 +56,10 @@ export const IssuesForm = (props) => {
                 onChange={onChange}
                 isValid={repoValidity}
                 errorMsg="Fill the repository field"
+                dropdown={true}
+                ownerValue={owner}
             />
-            <Button
-                onClick={onSubmit}
-            >
-                Search
-            </Button>
+            <Button onClick={onSubmit}>Search</Button>
         </Form>
     );
 };

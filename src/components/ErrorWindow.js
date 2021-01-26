@@ -1,20 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-export const ErrorWindow = ({ children }) => {
+export const ErrorWindow = ({ children, showError }) => {
     const [isShown, setIsShown] = useState(false);
 
+    const ref = useRef();
+
+    function onTransitionEnd () {
+        ref.current.removeEventListener('transitionend', onTransitionEnd);
+        showError(false);
+    }
+
     useEffect(() => {
-        setIsShown(true);
+        // wait for base styles
+        requestAnimationFrame(() => setIsShown(true));
         setTimeout(() => {
+            ref.current.addEventListener('transitionend', onTransitionEnd);
             setIsShown(false);
         }, 3000);
     }, []);
 
     return (
         ReactDOM.createPortal(
-            <div className={isShown ? 'error-window show' : 'error-window'}>
+            <div
+                ref={ref}
+                className={isShown ? 'error-window show' : 'error-window'}
+            >
                 {children}
             </div>,
             document.body

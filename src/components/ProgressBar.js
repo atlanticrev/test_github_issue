@@ -1,7 +1,7 @@
 import React from 'react';
 import { useEffect, useRef } from 'react';
 
-export const ProgressBar = ({ progress, setProgress }) => {
+export const ProgressBar = ({ progress, setProgress, isLoading }) => {
     const prevValue = useRef(progress);
     const intervalId = useRef(progress);
 
@@ -15,11 +15,13 @@ export const ProgressBar = ({ progress, setProgress }) => {
     }
 
     useEffect(() => {
-        intervalId.current = setInterval(intervalTick);
-        return () => clearInterval(intervalId.current);
-    }, []);
+        if (isLoading) {
+            intervalId.current = setInterval(intervalTick);
+            return () => clearInterval(intervalId.current);
+        }
+    }, [isLoading]);
 
     return (
-        <div className="progress-bar" style={{'--progress': `${progress}%`}} />
+        <div className={isLoading ? 'progress-bar show' : 'progress-bar'} style={{'--progress': `${progress}%`}} />
     );
 };

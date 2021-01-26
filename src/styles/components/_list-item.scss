@@ -6,4 +6,18 @@
   width: 100%;
   padding: 2rem;
   color: $list-item-text-color;
+  user-select: none;
+  cursor: pointer;
+
+  & > *:not(:last-child) {
+    margin-bottom: 10px;
+  }
+
+  &:hover {
+    color: $white;
+  }
+
+  &:active {
+    color: $blue;
+  }
 }
