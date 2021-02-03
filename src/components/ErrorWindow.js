@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
 
+const ERROR_VIEW_DURATION = 3000;
+
 export const ErrorWindow = ({ children, showError }) => {
     const [isShown, setIsShown] = useState(false);
 
@@ -13,12 +15,12 @@ export const ErrorWindow = ({ children, showError }) => {
     }
 
     useEffect(() => {
-        // wait for base styles
+        // get styles calculated on last async task
         requestAnimationFrame(() => setIsShown(true));
         setTimeout(() => {
             ref.current.addEventListener('transitionend', onTransitionEnd);
             setIsShown(false);
-        }, 3000);
+        }, ERROR_VIEW_DURATION);
     }, []);
 
     return (

@@ -1,23 +1,46 @@
 .list-item {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
-  padding: 2rem;
+  padding: 20px;
   color: $list-item-text-color;
   user-select: none;
-  cursor: pointer;
 
-  & > *:not(:last-child) {
-    margin-bottom: 10px;
+  .issue-description {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    word-break: break-word;
+    width: 60%;
+
+    & > *:not(:last-child) {
+      margin-bottom: 10px;
+    }
+
+    h2 {
+      text-align: start;
+    }
   }
 
-  &:hover {
-    color: $white;
-  }
+  @media (max-width: 650px) {
+    & {
+      flex-direction: column;
+      justify-content: flex-start;
+      padding: 1rem;
 
-  &:active {
-    color: $blue;
+      .issue-description {
+        align-items: flex-end;
+        width: 100%;
+
+        h2 {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    }
   }
 }

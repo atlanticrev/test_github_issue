@@ -15,6 +15,7 @@
   transform: translate3d(150%, 0, 0);
   opacity: 0;
   transition: all ease-out .25s;
+  box-shadow: $main-shadow;
   z-index: 3;
 
   &.show {

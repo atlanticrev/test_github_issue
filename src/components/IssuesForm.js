@@ -1,40 +1,32 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { Form } from "./Form";
 import { Input } from "./Input";
 import { Button } from "./Button";
 
-export const IssuesForm = (props) => {
-    const [owner, setOwner] = useState('');
-    const [repo, setRepo] = useState('');
+export const IssuesForm = ({ onSubmitted }) => {
+    const owner = useFormField('');
+    const repo = useFormField('');
 
-    const [ownerValidity, setOwnerValidity] = useState(true);
-    const [repoValidity, setRepoValidity] = useState(true);
+    const checkValidityAndSubmit = () => {
+        owner.value ? owner.setIsValid(true) : owner.setIsValid(false);
+        repo.value ? repo.setIsValid(true) : repo.setIsValid(false);
+        if (owner.value && repo.value) {
+            onSubmitted && onSubmitted(owner.value, repo.value);
+        }
+    };
 
-    function onSubmit (e) {
+    const dropdownSelection = useSelected(false, checkValidityAndSubmit);
+
+    const onDropdownSelect = (e, value) => {
+        repo.onValueChange(e, value);
+        dropdownSelection.onSelect();
+    };
+
+    const onSubmit = (e) => {
         e.preventDefault();
-        // console.log('submit', owner, repo);
-        owner ? setOwnerValidity(true) : setOwnerValidity(false);
-        repo ? setRepoValidity(true) : setRepoValidity(false);
-        if (owner && repo) {
-            props.onSubmitted && props.onSubmitted(owner, repo);
-        }
-    }
-
-    function onChange (e) {
-        switch (e.target.name) {
-            case 'owner':
-                setOwnerValidity(true);
-                setOwner(e.target.value);
-                break;
-            case 'repo':
-                setRepoValidity(true);
-                setRepo(e.target.value);
-                break;
-            default:
-                break;
-        }
+        checkValidityAndSubmit();
     }
 
     return (
@@ -43,23 +35,56 @@ export const IssuesForm = (props) => {
                 type="text"
                 name="owner"
                 placeholder="Owner"
-                value={owner}
-                onChange={onChange}
-                isValid={ownerValidity}
+                value={owner.value}
+                onChange={owner.onValueChange}
+                isValid={owner.isValid}
                 errorMsg="Fill the owner field"
             />
             <Input
                 type="text"
                 name="repo"
                 placeholder="Repository"
-                value={repo}
-                onChange={onChange}
-                isValid={repoValidity}
+                value={repo.value}
+                ownerValue={owner.value} // @todo value from another form field
+                onChange={repo.onValueChange}
+                isValid={repo.isValid}
                 errorMsg="Fill the repository field"
-                dropdown={true}
-                ownerValue={owner}
+                needDropdown={true}
+                onDropdownSelect={onDropdownSelect}
             />
             <Button onClick={onSubmit}>Search</Button>
         </Form>
     );
+};
+
+const useFormField = (initValue = '') => {
+    const [value, setValue] = useState(initValue);
+    const [isValid, setIsValid] = useState(true);
+    const onValueChange = (e, value = null) => {
+        setIsValid(true);
+        // @todo checks for value and target.value
+        setValue(value || e.target.value);
+    };
+    return {
+        value,
+        isValid,
+        setIsValid,
+        onValueChange
+    };
+};
+
+const useSelected = (initValue = false, onSelected = null) => {
+    const [isSelected, setIsSelected] = useState(initValue);
+    const onSelect = () => {
+        setIsSelected(true);
+    };
+    useEffect(() => {
+        if (isSelected) {
+            setIsSelected(false);
+            onSelected();
+        }
+    }, [isSelected]);
+    return {
+        onSelect
+    };
 };

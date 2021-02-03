@@ -1,7 +1,9 @@
 import React from 'react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
-export const ProgressBar = ({ progress, setProgress, isLoading }) => {
+export const ProgressBar = ({ isLoading }) => {
+    const [progress, setProgress] = useState(0);
+
     const prevValue = useRef(progress);
     const intervalId = useRef(progress);
 
@@ -14,10 +16,14 @@ export const ProgressBar = ({ progress, setProgress, isLoading }) => {
         prevValue.current = newValue;
     }
 
+    // @todo how it works?
     useEffect(() => {
         if (isLoading) {
             intervalId.current = setInterval(intervalTick);
-            return () => clearInterval(intervalId.current);
+            return () => {
+                setProgress(100);
+                clearInterval(intervalId.current);
+            };
         }
     }, [isLoading]);
 

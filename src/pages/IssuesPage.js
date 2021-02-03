@@ -12,36 +12,49 @@ export const IssuesPage = () => {
     const [issues, setIssues] = useState([]);
     const [showError, setShowError] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [progress, setProgress] = useState(0);
 
-    function onLoadStart () {
-        setProgress(0);
+    // const getData = (url) => {
+    //     return fetch(url)
+    //         // @todo working with 404 and other answer codes
+    //         .then(res => {
+    //             if (!res.ok) {
+    //                 throw new Error('Response status is not OK');
+    //             }
+    //             return res;
+    //         })
+    //         .then(res => res.json())
+    //         .catch(err => console.log(err));
+    // };
+
+    const onSubmitted = (owner, repo) => {
         setLoading(true);
-    }
 
-    function onLoadEnd () {
-        setProgress(100);
-        setLoading(false);
-    }
+        // getData()
+        //     .then(data => {
+        //         setLoading(false);
+        //         setIssues(data);
+        //     })
+        //     .catch(err => {
+        //         setLoading(false);
+        //         setShowError(true);
+        //     });
 
-    function onSubmitted (owner, repo) {
-        onLoadStart();
-        fetch(`https://api.github.com/repos/${owner}/${repo}/issues?per_page=5`)
+        // @todo need to refactor
+        fetch(`https://api.github.com/repos/${owner}/${repo}/issues?per_page=${5}`)
+            // @todo working with 404 and other answer codes
             .then(response => {
                 if (!response.ok) {
-                    // Go to catch block (is it correct?)
                     return false;
                 }
                 return response;
             })
             .then(response => response.json())
             .then(items => {
-                onLoadEnd();
+                setLoading(false);
                 setIssues(items);
             })
-            .catch(err => {
-                console.error(err);
-                onLoadEnd();
+            .catch(() => {
+                setLoading(false);
                 setShowError(true);
             });
     }
@@ -51,11 +64,7 @@ export const IssuesPage = () => {
             <HeaderPanel>
                 <IssuesForm onSubmitted={onSubmitted}/>
             </HeaderPanel>
-            <ProgressBar
-                progress={progress}
-                setProgress={setProgress}
-                isLoading={loading}
-            />
+            <ProgressBar isLoading={loading} />
             <List items={issues} />
             {showError && <ErrorWindow showError={setShowError}>Owner or Repository not found</ErrorWindow>}
         </>

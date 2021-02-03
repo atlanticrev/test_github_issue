@@ -4,12 +4,12 @@
   justify-content: flex-start;
   align-items: flex-start;
   position: relative;
+  max-width: 240px;
 
   .input-error-msg {
     position: absolute;
     bottom: 100%;
     font-size: 0.8rem;
-    //font-weight: bold;
     color: $input-error;
   }
 
@@ -24,7 +24,8 @@
 
     // Changes container styles when focus within happens
     //&:focus-within {
-    //  border-color: darken(gray, 20%);
+    //  border-bottom-left-radius: 0;
+    //  border-bottom-right-radius: 0;
     //}
 
     input {

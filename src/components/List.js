@@ -6,10 +6,16 @@ export const List = ({ items }) => {
     if (items.length) {
         return (
             <ul className="list">
-                {items.map(item => <ListItem key={item.id} itemInfo={item}/>)}
+                {items.map(item => <ListItem key={item.id} data={item}/>)}
             </ul>
         );
     } else {
-        return null;
+        return (
+            <ul className="list">
+                <li className="list-item">
+                    <h2>There are no issues</h2>
+                </li>
+            </ul>
+        );
     }
 };

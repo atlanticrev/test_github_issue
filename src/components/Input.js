@@ -7,33 +7,54 @@ export const Input = (props) => {
     const [dropdownItems, setDropdownItems] = useState([]);
 
     const inputEl = useRef();
+    const prevOwnerValue = useRef();
 
-    // Focus/Blur
-    useEffect(() => {
-        function onFocus () {
-            console.log(props.dropdown, props.ownerValue);
-            if (!props.dropdown || !props.ownerValue) {
-                return;
-            }
+    const getItems = () => {
+        // let response = await fetch(`https://api.github.com/users/${props.ownerValue}/repos`);
+        // if (!response.ok) {
+        //     if (response.status === 404) {
+        //         throw new Error('Owner is not found');
+        //     } else {
+        //         throw new Error('Error');
+        //     }
+        // }
+        // let items = await response.json();
+        // setDropdownItems(items);
+        return new Promise((resolve, reject) => {
             fetch(`https://api.github.com/users/${props.ownerValue}/repos`)
                 .then(response => {
                     if (!response.ok) {
-                        // Go to catch block (is it correct?)
-                        return false;
+                        if (response.status === 404) {
+                            reject(new Error(`Repos of this ${props.ownerValue} is not found`));
+                        } else {
+                            reject(new Error('Error'));
+                        }
                     }
                     return response;
                 })
                 .then(response => response.json())
                 .then(items => {
-                    console.log(items);
+                    resolve(items);
                     setDropdownItems(items);
-                    setDropdownShow(true);
                 })
-                .catch(err => {
-                    console.error(err);
-                });
+        });
+    };
+
+    useEffect(() => {
+        const onFocus = () => {
+            if (!props.needDropdown || !props.ownerValue) {
+                return;
+            }
+            if (props.ownerValue !== prevOwnerValue.current) {
+                prevOwnerValue.current = props.ownerValue;
+                getItems()
+                    .then(() => setDropdownShow(true))
+                    .catch(err => console.log(err.message));
+            } else {
+                setDropdownShow(true);
+            }
         }
-        function onBlur () {
+        const onBlur = () => {
             setDropdownShow(false);
         }
         inputEl.current.addEventListener('focus', onFocus);
@@ -42,12 +63,15 @@ export const Input = (props) => {
             inputEl.current.removeEventListener('focus', onFocus);
             inputEl.current.removeEventListener('blur', onBlur);
         };
+        // @todo learn more about dependencies
     }, [props.ownerValue]);
+
+    const needShowError = props.isValid !== undefined && !props.isValid;
 
     return (
         <div className="input-container">
-            {props.isValid !== undefined && !props.isValid && <span className="input-error-msg">{props.errorMsg}</span>}
-            <label className={props.isValid !== undefined && props.isValid ? 'input-label' : 'input-label error'}>
+            {needShowError && <span className="input-error-msg">{props.errorMsg}</span>}
+            <label className={needShowError ? 'input-label error' : 'input-label' }>
                 <input
                     autoComplete="off"
                     type={props.type}
@@ -58,7 +82,13 @@ export const Input = (props) => {
                     onChange={props.onChange}
                 />
             </label>
-            {props.dropdown && dropdownShow && <DropdownList items={dropdownItems}/>}
+            {
+                props.needDropdown && dropdownShow &&
+                    <DropdownList
+                        items={dropdownItems}
+                        onSelect={props.onDropdownSelect}
+                    />
+            }
         </div>
     );
 };
