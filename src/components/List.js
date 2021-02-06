@@ -1,21 +1,20 @@
 import React from 'react';
 
-import { ListItem } from './ListItem';
-
-export const List = ({ items }) => {
-    if (items.length) {
+export const List = ({ className, itemsData, defaultItem, render }) => {
+    if (itemsData.length) {
         return (
-            <ul className="list">
-                {items.map(item => <ListItem key={item.id} data={item}/>)}
+            <ul className={className}>
+                {itemsData.map(itemData => render(itemData))}
             </ul>
         );
     } else {
-        return (
-            <ul className="list">
+        return defaultItem ? (
+            // @todo use default item form props
+            <ul className={className}>
                 <li className="list-item">
                     <h2>There are no issues</h2>
                 </li>
             </ul>
-        );
+        ) : null;
     }
 };

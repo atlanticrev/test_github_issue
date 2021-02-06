@@ -7,7 +7,7 @@
   max-width: 240px;
 
   .input-error-msg {
-    position: absolute;
+    position: relative;
     bottom: 100%;
     font-size: 0.8rem;
     color: $input-error;
@@ -21,12 +21,6 @@
     border: 1px solid $black;
     border-radius: 10px;
     overflow: hidden;
-
-    // Changes container styles when focus within happens
-    //&:focus-within {
-    //  border-bottom-left-radius: 0;
-    //  border-bottom-right-radius: 0;
-    //}
 
     input {
       width: 100%;

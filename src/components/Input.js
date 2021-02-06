@@ -1,31 +1,26 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { DropdownList } from "./DropdownList";
+
+import { List } from "./List";
+import { DropdownItem } from "./DropdownItem";
 
 export const Input = (props) => {
-    const [dropdownShow, setDropdownShow] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
     const [dropdownItems, setDropdownItems] = useState([]);
 
     const inputEl = useRef();
     const prevOwnerValue = useRef();
 
+    /**
+     * @returns {Promise<Array<DropdownItemData>>}
+     */
     const getItems = () => {
-        // let response = await fetch(`https://api.github.com/users/${props.ownerValue}/repos`);
-        // if (!response.ok) {
-        //     if (response.status === 404) {
-        //         throw new Error('Owner is not found');
-        //     } else {
-        //         throw new Error('Error');
-        //     }
-        // }
-        // let items = await response.json();
-        // setDropdownItems(items);
         return new Promise((resolve, reject) => {
             fetch(`https://api.github.com/users/${props.ownerValue}/repos`)
                 .then(response => {
                     if (!response.ok) {
                         if (response.status === 404) {
-                            reject(new Error(`Repos of this ${props.ownerValue} is not found`));
+                            reject(new Error(`Repos of the ${props.ownerValue} are not found`));
                         } else {
                             reject(new Error('Error'));
                         }
@@ -33,10 +28,7 @@ export const Input = (props) => {
                     return response;
                 })
                 .then(response => response.json())
-                .then(items => {
-                    resolve(items);
-                    setDropdownItems(items);
-                })
+                .then(items => resolve(items));
         });
     };
 
@@ -48,25 +40,46 @@ export const Input = (props) => {
             if (props.ownerValue !== prevOwnerValue.current) {
                 prevOwnerValue.current = props.ownerValue;
                 getItems()
-                    .then(() => setDropdownShow(true))
+                    .then(items => {
+                        setDropdownItems(items);
+                        setShowDropdown(true);
+                    })
                     .catch(err => console.log(err.message));
             } else {
-                setDropdownShow(true);
+                setShowDropdown(true);
             }
         }
+
         const onBlur = () => {
-            setDropdownShow(false);
+            setShowDropdown(false);
         }
+
         inputEl.current.addEventListener('focus', onFocus);
         inputEl.current.addEventListener('blur', onBlur);
+
         return () => {
             inputEl.current.removeEventListener('focus', onFocus);
             inputEl.current.removeEventListener('blur', onBlur);
         };
-        // @todo learn more about dependencies
-    }, [props.ownerValue]);
+    });
 
+    /** @type Boolean */
     const needShowError = props.isValid !== undefined && !props.isValid;
+
+    const dropdown = props.needDropdown ? (
+        <List
+            className="dropdown-list"
+            itemsData={dropdownItems}
+            render={dropdownItem =>
+                <DropdownItem
+                    key={dropdownItem.id}
+                    itemData={dropdownItem}
+                    onSelect={props.onDropdownSelect}
+                />
+            }
+            defaultItem={true}
+        />
+    ) : null;
 
     return (
         <div className="input-container">
@@ -82,13 +95,7 @@ export const Input = (props) => {
                     onChange={props.onChange}
                 />
             </label>
-            {
-                props.needDropdown && dropdownShow &&
-                    <DropdownList
-                        items={dropdownItems}
-                        onSelect={props.onDropdownSelect}
-                    />
-            }
+            {showDropdown && dropdown}
         </div>
     );
 };

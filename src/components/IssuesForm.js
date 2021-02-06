@@ -52,7 +52,11 @@ export const IssuesForm = ({ onSubmitted }) => {
                 needDropdown={true}
                 onDropdownSelect={onDropdownSelect}
             />
-            <Button onClick={onSubmit}>Search</Button>
+            <Button
+                onClick={onSubmit}
+            >
+                Search
+            </Button>
         </Form>
     );
 };

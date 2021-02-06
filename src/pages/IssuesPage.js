@@ -7,6 +7,7 @@ import { IssuesForm } from "../components/IssuesForm";
 import { HeaderPanel } from "../components/HeaderPanel";
 import { ErrorWindow } from "../components/ErrorWindow";
 import { ProgressBar } from "../components/ProgressBar";
+import { IssueItem } from "../components/IssueItem";
 
 export const IssuesPage = () => {
     const [issues, setIssues] = useState([]);
@@ -44,6 +45,7 @@ export const IssuesPage = () => {
             // @todo working with 404 and other answer codes
             .then(response => {
                 if (!response.ok) {
+                    // @todo go to catch block
                     return false;
                 }
                 return response;
@@ -62,10 +64,24 @@ export const IssuesPage = () => {
     return (
         <>
             <HeaderPanel>
-                <IssuesForm onSubmitted={onSubmitted}/>
+                <IssuesForm
+                    onSubmitted={onSubmitted}
+                />
             </HeaderPanel>
-            <ProgressBar isLoading={loading} />
-            <List items={issues} />
+            <ProgressBar
+                isLoading={loading}
+            />
+            <List
+                className="issues-list"
+                itemsData={issues}
+                render={itemData =>
+                    <IssueItem
+                        key={itemData.id}
+                        itemData={itemData}
+                    />
+                }
+                defaultItem={true}
+            />
             {showError && <ErrorWindow showError={setShowError}>Owner or Repository not found</ErrorWindow>}
         </>
     );
