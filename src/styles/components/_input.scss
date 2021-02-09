@@ -7,7 +7,7 @@
   max-width: 240px;
 
   .input-error-msg {
-    position: relative;
+    position: absolute;
     bottom: 100%;
     font-size: 0.8rem;
     color: $input-error;

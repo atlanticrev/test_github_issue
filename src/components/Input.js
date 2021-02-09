@@ -11,32 +11,34 @@ export const Input = (props) => {
     const inputEl = useRef();
     const prevOwnerValue = useRef();
 
-    /**
-     * @returns {Promise<Array<DropdownItemData>>}
-     */
-    const getItems = () => {
-        return new Promise((resolve, reject) => {
-            fetch(`https://api.github.com/users/${props.ownerValue}/repos`)
-                .then(response => {
-                    if (!response.ok) {
-                        if (response.status === 404) {
-                            reject(new Error(`Repos of the ${props.ownerValue} are not found`));
-                        } else {
-                            reject(new Error('Error'));
-                        }
-                    }
-                    return response;
-                })
-                .then(response => response.json())
-                .then(items => resolve(items));
-        });
-    };
-
     useEffect(() => {
+        /**
+         * @returns {Promise<Array<DropdownItemData>>}
+         */
+        const getItems = () => {
+            return new Promise((resolve, reject) => {
+                fetch(`https://api.github.com/users/${props.ownerValue}/repos`)
+                    .then(response => {
+                        if (!response.ok) {
+                            if (response.status === 404) {
+                                reject(new Error(`Repos of the ${props.ownerValue} are not found`));
+                            } else {
+                                reject(new Error('Error'));
+                            }
+                        }
+                        return response;
+                    })
+                    .then(response => response.json())
+                    .then(items => resolve(items));
+            });
+        };
+
         const onFocus = () => {
             if (!props.needDropdown || !props.ownerValue) {
                 return;
             }
+
+            // Trigger loading only when prev and curr values is different
             if (props.ownerValue !== prevOwnerValue.current) {
                 prevOwnerValue.current = props.ownerValue;
                 getItems()
@@ -64,7 +66,7 @@ export const Input = (props) => {
     });
 
     /** @type Boolean */
-    const needShowError = props.isValid !== undefined && !props.isValid;
+    const showErrorMessage = props.isValid !== undefined && !props.isValid;
 
     const dropdown = props.needDropdown ? (
         <List
@@ -77,14 +79,13 @@ export const Input = (props) => {
                     onSelect={props.onDropdownSelect}
                 />
             }
-            defaultItem={true}
         />
     ) : null;
 
     return (
         <div className="input-container">
-            {needShowError && <span className="input-error-msg">{props.errorMsg}</span>}
-            <label className={needShowError ? 'input-label error' : 'input-label' }>
+            {showErrorMessage && <span className="input-error-msg">{props.errorMsg}</span>}
+            <label className={showErrorMessage ? 'input-label error' : 'input-label' }>
                 <input
                     autoComplete="off"
                     type={props.type}

@@ -4,34 +4,52 @@ import { useState, useEffect, useRef } from 'react';
 
 const ERROR_VIEW_DURATION = 3000;
 
-export const ErrorWindow = ({ children, showError }) => {
-    const [isShown, setIsShown] = useState(false);
-
-    const ref = useRef();
-
-    function onTransitionEnd () {
-        ref.current.removeEventListener('transitionend', onTransitionEnd);
-        showError(false);
-    }
-
-    useEffect(() => {
-        // get styles calculated on last async task
-        requestAnimationFrame(() => setIsShown(true));
-        setTimeout(() => {
-            ref.current.addEventListener('transitionend', onTransitionEnd);
-            setIsShown(false);
-        }, ERROR_VIEW_DURATION);
-    }, []);
+export const ErrorWindow = ({ children, setShowError }) => {
+    const animation = useAnimation(() => setShowError(false));
 
     return (
         ReactDOM.createPortal(
             <div
-                ref={ref}
-                className={isShown ? 'error-window show' : 'error-window'}
+                className={animation.showClassIsSet ? 'error-window show' : 'error-window'}
+                ref={animation.ref}
             >
                 {children}
             </div>,
             document.body
         )
     );
+};
+
+const useAnimation = (onFinish) => {
+    const [showClassIsSet, setShowClassIsSet] = useState(false);
+
+    const ref = useRef();
+
+    useEffect(() => {
+        const onTransitionStart = () => {
+            // waiting for the right calculated initial styles
+            requestAnimationFrame(() => {
+                setShowClassIsSet(true);
+            });
+        };
+
+        const onTransitionEnd = () => {
+            ref.current.removeEventListener('transitionend', onTransitionEnd);
+            onFinish();
+        }
+
+        // Start swipe-in animation
+        onTransitionStart();
+
+        // Schedule swipe-out animation
+        setTimeout(() => {
+            ref.current.addEventListener('transitionend', onTransitionEnd);
+            setShowClassIsSet(false);
+        }, ERROR_VIEW_DURATION);
+    }, []);
+
+    return {
+        showClassIsSet,
+        ref
+    };
 };

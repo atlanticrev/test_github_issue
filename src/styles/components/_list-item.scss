@@ -1,4 +1,4 @@
-.list-item {
+.issue-item {
   display: flex;
   flex-flow: row nowrap;
   justify-content: space-between;
@@ -17,12 +17,12 @@
     word-break: break-word;
     width: 60%;
 
-    & > *:not(:last-child) {
-      margin-bottom: 10px;
+    .issue-title {
+      text-align: start;
     }
 
-    h2 {
-      text-align: start;
+    & > *:not(:last-child) {
+      margin-bottom: 10px;
     }
   }
 
@@ -36,7 +36,7 @@
         align-items: flex-end;
         width: 100%;
 
-        h2 {
+        .issue-title {
           width: 100%;
           text-align: center;
         }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 
-import { Form } from "./Form";
 import { Input } from "./Input";
 import { Button } from "./Button";
 
@@ -30,7 +29,7 @@ export const IssuesForm = ({ onSubmitted }) => {
     }
 
     return (
-        <Form>
+        <form>
             <Input
                 type="text"
                 name="owner"
@@ -45,28 +44,29 @@ export const IssuesForm = ({ onSubmitted }) => {
                 name="repo"
                 placeholder="Repository"
                 value={repo.value}
-                ownerValue={owner.value} // @todo value from another form field
+                ownerValue={owner.value} // value from another form field
                 onChange={repo.onValueChange}
                 isValid={repo.isValid}
                 errorMsg="Fill the repository field"
                 needDropdown={true}
                 onDropdownSelect={onDropdownSelect}
             />
-            <Button
-                onClick={onSubmit}
-            >
-                Search
-            </Button>
-        </Form>
+            <Button onClick={onSubmit}>Search</Button>
+        </form>
     );
 };
 
+/**
+ *
+ * @param initValue
+ * @returns {{setIsValid: function, onValueChange: function, isValid: boolean, value: string}}
+ */
 const useFormField = (initValue = '') => {
     const [value, setValue] = useState(initValue);
     const [isValid, setIsValid] = useState(true);
     const onValueChange = (e, value = null) => {
         setIsValid(true);
-        // @todo checks for value and target.value
+        // checks for value and target.value
         setValue(value || e.target.value);
     };
     return {
@@ -77,7 +77,12 @@ const useFormField = (initValue = '') => {
     };
 };
 
-const useSelected = (initValue = false, onSelected = null) => {
+/**
+ * @param {boolean} initValue
+ * @param {function} onSelected
+ * @returns {{onSelect: function}}
+ */
+const useSelected = (initValue = false, onSelected = () => {}) => {
     const [isSelected, setIsSelected] = useState(initValue);
     const onSelect = () => {
         setIsSelected(true);
